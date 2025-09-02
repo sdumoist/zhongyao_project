@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>中药匹配系统</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    .result-box { background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin-top: 20px; white-space: pre-wrap; }
+    .log-link { margin-top: 10px; display: block; color: blue; text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<h2>上传质谱文件进行中药匹配</h2>
+
+<form id="uploadForm">
+  <input type="file" id="fileInput" name="file" accept=".csv" required>
+  <button type="submit">上传并执行</button>
+</form>
+
+<div id="result" class="result-box" style="display: none;"></div>
+
+<script>
+  document.getElementById('uploadForm').addEventListener('submit', async function(e) {
+    e.preventDefault();  // 阻止默认提交行为
+
+    const fileInput = document.getElementById('fileInput');
+    const file = fileInput.files[0];
+    if (!file) {
+      alert('请先选择一个CSV文件！');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const resultBox = document.getElementById('result');
+    resultBox.style.display = 'block';
+    resultBox.textContent = '⏳ 正在上传并执行，请稍候...';
+
+    try {
+      const response = await fetch('/upload/run', {
+        method: 'POST',
+        body: formData
+      });
+      const result = await response.json();
+
+      if (result.code === 200) {
+        // 匹配成功，展示返回结果（result.data 结构）
+        const data = result.data;
+
+        let displayText = `✅ 匹配成功！\n`;
+        displayText += `匹配药材：${data["匹配药材"]?.join(", ")}\n`;
+        displayText += `匹配率：${data["相似度得分"]?.map(score => (score * 100).toFixed(2) + '%').join(", ")}\n`;
+        displayText += `结果图像路径：\n${data["图片地址"]?.join("\n")}\n`;
+
+        resultBox.textContent = displayText;
+
+      } else {
+        // 匹配失败，展示错误消息
+        resultBox.textContent = `❌ 匹配失败：${result.msg}`;
+      }
+    } catch (error) {
+      resultBox.textContent = `❌ 请求异常：${error.message}`;
+    }
+  });
+</script>
+
+</body>
+</html>

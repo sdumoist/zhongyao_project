@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>任务运行日志</title>
+  <style>
+    body {
+      font-family: Consolas, monospace;
+      background-color: #f9f9f9;
+      padding: 20px;
+    }
+    h2 {
+      color: #333;
+    }
+    #log-container {
+      background-color: #272822;
+      color: #f8f8f2;
+      padding: 15px;
+      border-radius: 8px;
+      white-space: pre-wrap;
+      overflow-y: auto;
+      max-height: 80vh;
+    }
+    button {
+      margin-top: 10px;
+      padding: 6px 12px;
+    }
+  </style>
+</head>
+<body>
+<h2>任务运行日志</h2>
+<div id="log-container">
+  正在加载日志内容...
+</div>
+<button onclick="refreshLog()">🔄 刷新</button>
+
+<script>
+  function refreshLog() {
+    fetch(window.location.href + '/text')
+            .then(response => response.text())
+            .then(data => {
+              document.getElementById('log-container').textContent = data;
+            })
+            .catch(error => {
+              document.getElementById('log-container').textContent = "读取失败：" + error;
+            });
+  }
+
+  // 页面加载自动刷新一次
+  window.onload = refreshLog;
+</script>
+</body>
+</html>
