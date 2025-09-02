@@ -1,0 +1,35 @@
+# --- Java / Spring ---
+target/
+*.class
+*.log
+hs_err_pid*
+.rebel.xml
+
+# Maven / Gradle
+.mvn/wrapper/maven-wrapper.jar
+.mvn/wrapper/maven-wrapper.properties
+.mvn/
+.gradle/
+build/
+
+# --- Node / Vue ---
+node_modules/
+dist/
+*.local
+.env
+.env.*
+vite.config.local.*
+*.cache
+
+# --- IDE / OS ---
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+.DS_Store
+Thumbs.db
+
+# --- App secrets (请把本地私密配置放这里) ---
+application-local.yml
+application-*.local.yml
