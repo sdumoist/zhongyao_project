@@ -61,4 +61,17 @@ public class Result<T> implements Serializable {
         result.setMsg(msg);
         return result;
     }
+
+    // 示例：按照你类里已有字段/构造函数调整
+    public static <T> Result<T> failure(String msg) {
+        // 若你已有 error(msg)：
+        // return error(msg);
+
+        // 或者自己构造（根据你的 Result 字段来）：
+        Result<T> r = new Result<>();
+        r.setCode(500);
+        r.setMsg(msg);
+//        r.setSuccess(false);
+        return r;
+    }
 }
